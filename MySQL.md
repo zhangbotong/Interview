@@ -4,7 +4,7 @@
 
 B+ Tree
 
-* 只在 leaf 存数据，中间只存索引，a page can store more data, dimish disk IO. **Small level**, less IO, 矮胖
+* 只在 leaf 存数据，中间只存索引，a page can store more data, dimish disk IO. **Small level**, less IO, 矮胖.
 
 * 双向链表，适合**范围查询**。比如说我们想知道 12 月 1 日和 12 月 12 日之间的订单，这个时候可以先查找到 12 月 1 日所在的叶子节点，然后利用链表向右遍历，直到找到 12 月12 日的节点，这样就不需要从根节点查询了
 
@@ -89,3 +89,7 @@ Buffer pool:
 <img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/innodb/young%2Bold.png" alt="img" style="zoom:67%;" />
 
 # 常见面试问题
+
+# 疑问
+
+1. 用户更新记录，写到 buffer pool, undo log memory 就算写完了，如果这时 os 没有进行 sync，掉电不是丢数据了吗？ -- commit 必须等待 redo log 写到磁盘才算成功，这时便具有了 crash safe 能力 
