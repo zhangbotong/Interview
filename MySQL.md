@@ -92,7 +92,7 @@ Extra：Using index condition
 
 ## 解决问题（隔离级别）
 
-<img src="https://cdn.xiaolincoding.com//mysql/other/4e98ea2e60923b969790898565b4d643.png" style="zoom:70%;" />
+<img src="https://cdn.xiaolincoding.com//mysql/other/4e98ea2e60923b969790898565b4d643.png" style="zoom:45%;" />
 
 ### 读未提交（read uncommitted）
 
@@ -106,7 +106,7 @@ RR 在开启事物时生成快照，RC 每次读之前生成快照
 
 
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB/readview%E7%BB%93%E6%9E%84.drawio.png" style="zoom:60%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB/readview%E7%BB%93%E6%9E%84.drawio.png" style="zoom:40%;" />
 
 <img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB/ReadView.drawio.png" alt="img" style="zoom:60%;" />
 
@@ -122,7 +122,7 @@ RR 在开启事物时生成快照，RC 每次读之前生成快照
 
 例如，下图所示，A的修改对于B不可见。
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB/%E4%BA%8B%E5%8A%A1ab%E7%9A%84%E8%A7%86%E5%9B%BE2.png" alt="img" style="zoom:60%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost4@main/mysql/%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB/%E4%BA%8B%E5%8A%A1ab%E7%9A%84%E8%A7%86%E5%9B%BE2.png" alt="img" style="zoom:50%;" />
 
 #### next-key lock（当前读）
 
@@ -188,7 +188,7 @@ RR 在开启事物时生成快照，RC 每次读之前生成快照
 > mysql> select * from user where id = 2 for update;
 > ```
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E9%97%B4%E9%9A%99%E9%94%81.drawio.png" alt="img" style="zoom:50%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E9%97%B4%E9%9A%99%E9%94%81.drawio.png" alt="img" style="zoom:40%;" />
 
 锁 (1,5)
 
@@ -206,7 +206,7 @@ RR 在开启事物时生成快照，RC 每次读之前生成快照
 
 **最终锁范围(15, + ∞)**
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E5%A4%A7%E4%BA%8E15.drawio.png" alt="img" style="zoom:50%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E5%A4%A7%E4%BA%8E15.drawio.png" alt="img" style="zoom:40%;" />
 
 ##### 大于等于（等于加记录锁，大于加 next-key lock）
 
@@ -220,7 +220,7 @@ RR 在开启事物时生成快照，RC 每次读之前生成快照
 
 ​		**最终锁 [15, +∞)**
 
-​		<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E5%A4%A7%E4%BA%8E%E7%AD%89%E4%BA%8E15.drawio.png" alt="img" style="zoom:50%;" />
+​		<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E5%A4%A7%E4%BA%8E%E7%AD%89%E4%BA%8E15.drawio.png" alt="img" style="zoom:40%;" />
 
 2. 不存在等于记录（大于加 next-key lock）	
 
@@ -248,7 +248,7 @@ RR 在开启事物时生成快照，RC 每次读之前生成快照
 
 ​		**锁范围(-∞, 10)**
 
-​	<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E5%B0%8F%E4%BA%8E%E7%AD%89%E4%BA%8E6.drawio.png" alt="img" style="zoom:50%;" />
+​	<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E5%B0%8F%E4%BA%8E%E7%AD%89%E4%BA%8E6.drawio.png" alt="img" style="zoom:40%;" />
 
 2. 存在等值记录
 
@@ -262,7 +262,7 @@ RR 在开启事物时生成快照，RC 每次读之前生成快照
 
  		**最终锁范围(-∞, 5)**
 
-​	<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E5%B0%8F%E4%BA%8E5.drawio.png" alt="img" style="zoom:50%;" />
+​	<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E5%B0%8F%E4%BA%8E5.drawio.png" alt="img" style="zoom:40%;" />
 
 ##### 小于等于（小于加 next-key lock、等于加 next-key lock、大于退化为间隙锁，遇到等于或大于的记录停止向后）
 
@@ -278,7 +278,7 @@ RR 在开启事物时生成快照，RC 每次读之前生成快照
 
 ​		共锁 **(-∞, 5]**
 
-​	<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E5%B0%8F%E4%BA%8E%E7%AD%89%E4%BA%8E5.drawio.png" alt="img" style="zoom:50%;" />
+​	<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E5%B0%8F%E4%BA%8E%E7%AD%89%E4%BA%8E5.drawio.png" alt="img" style="zoom:40%;" />
 
 2. 不存在等值记录
 
@@ -306,7 +306,7 @@ RR 在开启事物时生成快照，RC 每次读之前生成快照
 
 
 
-​		<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E9%9D%9E%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E7%AD%89%E5%80%BC%E6%9F%A5%E8%AF%A2age=25.drawio.png" alt="img" style="zoom:50%;" />
+​		<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E9%9D%9E%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E7%AD%89%E5%80%BC%E6%9F%A5%E8%AF%A2age=25.drawio.png" alt="img" style="zoom:40%;" />
 
 ​		在 index_age 上的 39 上加锁，由于 39 != 25，所以退化为间隙锁。
 
@@ -370,7 +370,7 @@ mysql> select * from user where age >= 22  for update;
   * 若退化为记录锁，由于不具有唯一性，只锁该记录，但仍可以插入相同值的记录
   * 若退化为间隙锁，别扯淡锁你干啥呢
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E9%9D%9E%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2age%E5%A4%A7%E4%BA%8E%E7%AD%89%E4%BA%8E22.drawio.png" alt="img" style="zoom:50%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E8%A1%8C%E7%BA%A7%E9%94%81/%E9%9D%9E%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2age%E5%A4%A7%E4%BA%8E%E7%AD%89%E4%BA%8E22.drawio.png" alt="img" style="zoom:40%;" />
 
 ##### 小于（小于加 next-key lock，第一个不满足条件的加间隙锁）
 
@@ -429,7 +429,7 @@ Next-key-lock: (]
 
 ## Undo log（历史版本）
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%89%88%E6%9C%AC%E9%93%BE.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" style="zoom:60%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%89%88%E6%9C%AC%E9%93%BE.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" style="zoom:50%;" />
 
 ### 用途
 
@@ -442,7 +442,7 @@ Next-key-lock: (]
 
 ## Redo log
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/wal.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" style="zoom:50%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/wal.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" style="zoom:40%;" />
 
 ### 用途（Why）
 
@@ -495,7 +495,7 @@ redo buffer -- page cache(os) -- 磁盘
 
 * 过程：binlog 缓存 -- page cache(os) -- 磁盘
 
-  <img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/binlogcache.drawio.png" alt="binlog cach" style="zoom:70%;" />
+  <img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/binlogcache.drawio.png" alt="binlog cach" style="zoom:60%;" />
 
 * binlog 在 server 层，所以有线程概念，1 个线程 1 个 binlog 缓存
 
@@ -525,7 +525,7 @@ N：每次 commit 到 page cache，N次commit后到磁盘
 
 #### 主从复制
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="MySQL 主从复制过程" style="zoom:67%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%87%E7%A8%8B.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="MySQL 主从复制过程" style="zoom:60%;" />
 
 * 异步、半同步（半数从库成功即可）
 * 有延迟
@@ -537,7 +537,7 @@ N：每次 commit 到 page cache，N次commit后到磁盘
 
 **下图的写入都指 fsync**
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E5%B4%A9%E6%BA%83%E7%82%B9.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="时刻 A 与时刻 B" style="zoom:55%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E5%B4%A9%E6%BA%83%E7%82%B9.drawio.png?image_process=watermark,text_5YWs5LyX5Y-377ya5bCP5p6XY29kaW5n,type_ZnpsdHpoaw,x_10,y_10,g_se,size_20,color_0000CD,t_70,fill_0" alt="时刻 A 与时刻 B" style="zoom:50%;" />
 
 - **prepare 阶段**：将 XID（内部 XA 事务的 ID） 写入到 redo log，同时将 redo log 对应的事务状态设置为 prepare，然后将 redo log 持久化到磁盘（innodb_flush_log_at_trx_commit = 1 的作用）；
 - **commit 阶段**：把 XID 写入到 binlog，然后将 binlog 持久化到磁盘（sync_binlog = 1 的作用），接着将 redo log 状态设置为 commit。（此时该状态并不需要持久化到磁盘，只需要 write 到文件系统的 page cache 中就够了，因为只要 binlog 写磁盘成功，就算 redo log 的状态还是 prepare 也没有关系，一样会被认为事务已经执行成功）
@@ -557,23 +557,23 @@ N：每次 commit 到 page cache，N次commit后到磁盘
 - **sync 阶段**：所有 page cache 一起到磁盘
 - **commit 阶段**：各个事务按顺序做 InnoDB commit 操作；
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%BB%84%E6%8F%90%E4%BA%A41.png" alt="img" style="zoom:50%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%BB%84%E6%8F%90%E4%BA%A41.png" alt="img" style="zoom:40%;" />
 
 Flush 阶段一：组提交持久化 redo log（2PC的 prepare阶段）
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%BB%84%E6%8F%90%E4%BA%A42.png" alt="img" style="zoom:50%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%BB%84%E6%8F%90%E4%BA%A42.png" alt="img" style="zoom:40%;" />
 
 Flush 阶段二：binglog 写至 os 缓存
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/write_binlog.png" alt="img" style="zoom:50%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/write_binlog.png" alt="img" style="zoom:40%;" />
 
 Sync：binlog 组提交持久化
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%BB%84%E6%8F%90%E4%BA%A44.png" alt="img" style="zoom:50%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%BB%84%E6%8F%90%E4%BA%A44.png" alt="img" style="zoom:40%;" />
 
 Commit：
 
-<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%BB%84%E6%8F%90%E4%BA%A46.png" alt="img" style="zoom:50%;" />
+<img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/how_update/%E7%BB%84%E6%8F%90%E4%BA%A46.png" alt="img" style="zoom:40%;" />
 
 ### redo 组提交
 
