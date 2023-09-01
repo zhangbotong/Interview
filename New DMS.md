@@ -47,8 +47,10 @@ set：同一 group 中不同服务器的同一盘序号，例如：[server1 node
 - [ ] 列出上传下载速率指标，几台机器，多大文件，多块速率读写 
   - [ ] 8 服务器 * 4 盘 = 8 * 4 * 4T = 128 T，实际容量 = 128T * 0.75 = 96T。
 - [ ] minio高可用：erasure code，highway hash，reed-solomon code。n 份原始数据 + m 份备份数据，能通过 n+m 中的任意 n 份数据还原数据。todo 查论文。
-  - [ ] **范德蒙矩阵计算校验和**<img src="/Users/kyrie/Desktop/Screen Shot 2023-08-17 at 02.08.17.png" alt="Screen Shot 2023-08-17 at 02.08.17" style="zoom:40%;" />
-  - [ ] **高斯消去法还原（行列式计算）**<img src="/Users/kyrie/Desktop/Screen Shot 2023-08-17 at 02.05.55.png" alt="Screen Shot 2023-08-17 at 02.05.55" style="zoom:40%;" />
+  - [ ] **范德蒙矩阵计算校验和**<img src="https://github.com/zhangbotong/Interview/assets/7106986/962a253f-0bb4-43b6-a35d-72adf0e33cab)" alt="Screen Shot 2023-08-17 at 02.08.17" style="zoom:20%;" />
+
+  - [ ] **高斯消去法还原（行列式计算）**<img alt="reed-solomon" src="https://github.com/zhangbotong/Interview/assets/7106986/7b0c02f0-3ee0-487b-91ca-60b2d0494174" style="zoom:20%;" />
+
   - [ ] 使用伽罗瓦场进行运算
 
 
