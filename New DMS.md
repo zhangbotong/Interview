@@ -1,12 +1,32 @@
 ### 数据结构
 
-group：8 服务器 * 4 块盘。
+group：8 服务器 * 4 块盘。（4个冗余）
 
 set：同一 group 中不同服务器的同一盘序号，例如：[server1 node1, server2 node1,..., server7 node1, server8 node1] 构成一个 set。
 
 冗余：2
 
-这个 group 共有 4 个 set，每个文件存储在一个 set 中，每次分成 6 数据块，再计算 2 校验块。
+这个 group 共有 4 个 set，每个文件存储在一个 set 中，每次分成 4 数据块，再计算 4 校验块。
+
+### 坏盘/坏服务器
+
+首先，坏一台服务器不会影响客户正常使用，客户读数据时可以从其余7台server再做逆运算（高斯消元）得到所有数据块；客户写数据时也是会写到其余7台server中，只不过少了一个冗余。
+
+然后，会将坏server下线换上一台新server部署好程序后（**立即投入使用？Yes，优先保证性能正常使用，在空闲时恢复数据。在需要读坏块时，在此server进行计算返回顺便将此块恢复**），会在新server上进行group上所有文件都计算。对于坏server上的冗余块可以根据数据块正向计算可得，对于坏server上的数据块根据其他数据块和冗余块进行逆矩阵计算可得。（全空闲时恢复1T，写速率100M/s约需要**2.7h**）
+
+### 读写文件完整性 -- HighwayHash
+
+相当于md5，只不过速率更快，将128bit结果存储在mysql中。
+
+### 高可用 -- reed-solomon算法
+
+正向生成校验块：范德蒙矩阵 乘以 数据块组成的矩阵。
+
+逆向根据校验块生成数据块：范德蒙逆矩阵 乘以 校验块及其与数据块得到数据块矩阵。
+
+若数据块都在，则取数据块即可；否则，取数据块和冗余块进行计算后得到损坏数据块得到结果。
+
+需先拿到所有块的流，进行矩阵运算，得到流式结果数据块。（计算在坏服务器端读取时计算）
 
 ### 扩容（rebalance）
 
@@ -28,25 +48,19 @@ set：同一 group 中不同服务器的同一盘序号，例如：[server1 node
 ### 上传
 
 1. 请求 coor，插入数据库，获取锁；
-2. 为文件找一个 set；
-3. 在 coor 进行数据分片，例如，每个 set 有 8 块盘，配置冗余是 2，则将数据切分成 6 块，分别放到 6 块盘中，并且在客户端进行 reed-solomon 算法计算 2 冗余块内容，并分别上传至剩余 2 块盘。
+2. 为文件找一个 set；（最大剩余容量、hash）
+3. 在 coor 进行数据**分片**，例如，每个 set 有 8 块盘，配置冗余是 2，则将数据切分成 6 块，分别放到 6 块盘中，并且在客户端进行 reed-solomon 算法计算 2 冗余块内容，并分别上传至剩余 2 块盘。
 4. coor 对该文件解锁。
 
 ### 下载
 
 1. 请求 coor，获取数据所在 set 信息，如果所有服务器、磁盘都可用，就取所有数据块即可；若存在损坏块，就从数据库、校验块共 6 块，在客户端进行高斯消元求解损坏块。
 
-### 坏盘替换，数据处理
-
-* 坏盘中的数据块，根据高斯消元从剩余数据块+校验块中恢复（需从先拿到所有块写入本地磁盘，计算完再删掉）
-* 坏盘中的校验块，mysql 中记录了缺失的是第几块，在这做个行列式运算即可。
-* 多块坏盘，丢失同一文件既有数据块又有校验块，分别同上。对于校验块，需要先还原数据块后再计算。
-
 ### todo
 
 - [ ] 列出上传下载速率指标，几台机器，多大文件，多块速率读写 
-  - [ ] 8 服务器 * 4 盘 = 8 * 4 * 4T = 128 T，实际容量 = 128T * 0.75 = 96T。
-- [ ] minio高可用：erasure code，highway hash，reed-solomon code。n 份原始数据 + m 份备份数据，能通过 n+m 中的任意 n 份数据还原数据。todo 查论文。
+  - [ ] 8 服务器 * 4 盘 = 8 * 4 * 1T = 32 T，实际容量 = 32T * 0.75 = 24T。
+- [ ] minio高可用：erasure code，highway hash，reed-solomon code。n 份原始数据 + m 份备份数据，能通过 n+m 中的任意 n 份数据还原数据。
   - [ ] **范德蒙矩阵计算校验和**<img src="/Users/kyrie/Desktop/Screen Shot 2023-08-17 at 02.08.17.png" alt="Screen Shot 2023-08-17 at 02.08.17" style="zoom:40%;" />
   - [ ] **高斯消去法还原（行列式计算）**<img src="/Users/kyrie/Desktop/Screen Shot 2023-08-17 at 02.05.55.png" alt="Screen Shot 2023-08-17 at 02.05.55" style="zoom:40%;" />
   - [ ] 使用伽罗瓦场进行运算
@@ -60,7 +74,7 @@ set：同一 group 中不同服务器的同一盘序号，例如：[server1 node
 * 单机性能瓶颈
 * 扩容（动态添加 group）
 * 容错性（同一组，各机器互为备份）
-* 允许多台计算机共享和访问文件
+* 允许多台计算机共享和访问文件、
 
 举例：HDFS，GFS(Google File System), Ceph
 
@@ -155,9 +169,15 @@ Single Instruction Multi Data 一条指令处理多条数据。有点像向量�
 
 SEC-DED(Single Error Correcting - Double Error Detect)
 
+### 思考
 
+**去mysql化**
 
+写：文件全路径做hash，映射到不同的 set 及路径，写入这些块。
 
+读：文件全路径做hash，得到文件块的server及路径，获取所有块，进行矩阵逆运算。
 
+### 参考文献
 
+reed-solomon论文：chrome-extension://cdonnmffkdaoajfknoeeecmchibpmkmg/assets/pdf/web/viewer.html?file=https%3A%2F%2Fcgi.di.uoa.gr%2F~ad%2FM155%2FPapers%2FRS-Tutorial.pdf
 
