@@ -1,6 +1,6 @@
 ### 数据结构
 
-group：4 服务器 * 4 块盘。（4个冗余），共 8 个 group。共 128T，可用 64 T （todo：多个 group 是否共享传输 带宽？传输带宽一般也是1Gbps？公司几千人，如果做到每人下载速率都是10M/s）
+group：8 服务器 * 4 块盘。（4个冗余），共 2 个 group。共 64T，可用 32 T 
 
 set：同一 group 中不同服务器的同一盘序号，例如：[server1 node1, server2 node1,..., server7 node1, server8 node1] 构成一个 set。
 
@@ -49,6 +49,16 @@ Read
 
 需先拿到所有块的流，进行矩阵运算，得到流式结果数据块。（计算在坏服务器端读取时计算）
 
+#### 架构演进
+
+主备 --》reed-solomon
+
+主备分为：同步写、异步写
+
+同步写占用网络带宽，响应慢一些；
+
+异步写（类mysql）存在延迟，并且存在数据丢失的可能，为了保证数据安全，采用了同步写。
+
 #### Coordinator 高可用
 
 ##### 灾备
@@ -88,8 +98,6 @@ todo
 ### todo
 
 - [ ] 列出上传下载速率指标，几台机器，多大文件，多块速率读写 
-  <<<<<<< HEAD
-  - [ ] 8 服务器 * 4 盘 = 8 * 4 * 1T = 32 T，实际容量 = 32T * 0.75 = 24T。
 - [ ] minio高可用：erasure code，highway hash，reed-solomon code。n 份原始数据 + m 份备份数据，能通过 n+m 中的任意 n 份数据还原数据。
   - [ ] **范德蒙矩阵计算校验和**<img src="/Users/kyrie/Desktop/Screen Shot 2023-08-17 at 02.08.17.png" alt="Screen Shot 2023-08-17 at 02.08.17" style="zoom:40%;" />
   - [ ] **高斯消去法还原（行列式计算）**<img src="/Users/kyrie/Desktop/Screen Shot 2023-08-17 at 02.05.55.png" alt="Screen Shot 2023-08-17 at 02.05.55" style="zoom:40%;" />
@@ -142,7 +150,7 @@ group 内剩余容量，以最小的机器为准，因此建议机器配置相�
 
 ### 遇到的印象深刻的问题并如何解决
 
-从 issue 中找
+1. mysql 死锁，原因：select for update；解决：业务逻辑绕过 select for update；总结：不允许使用 select for update。
 
 ### 考点
 
