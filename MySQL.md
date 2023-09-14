@@ -76,6 +76,8 @@ Extra：Using index condition
 | **Isolation** | 多个事物并发读写 | 快照读（**mvcc**） + 当前读（**next key lock**） |
 | Durability    | 持久化磁盘       | redo log                                         |
 
+**BASE**：Basically、Available Soft Sate、Eventual consistency
+
 ## 并发事务引发问题
 
 ### 脏读（dirty read）
@@ -689,3 +691,4 @@ eg.
 # 问题列表
 
 1. 用户更新记录，写到 buffer pool, undo log memory 就算写完了，如果这时 os 没有进行 sync，掉电不是丢数据了吗？ -- commit 必须等待 redo log 写到磁盘才算成功，这时便具有了 crash safe 能力 
+1. 慢查询优化？-- 建立索引、索引覆盖、索引下推、优化 sql 语句逻辑、从业务上优化 sql

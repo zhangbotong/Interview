@@ -1,3 +1,5 @@
+## DMS
+
 ### 数据结构
 
 group：8 服务器 * 4 块盘。（4个冗余），共 2 个 group。共 64T，可用 32 T 
@@ -12,7 +14,7 @@ set：同一 group 中不同服务器的同一盘序号，例如：[server1 node
 
 #### contentserver 性能测试
 
-磁盘读写速率大概在 70M/s，带宽 = 1Gbps，即 125 MBps；读时瓶颈在网络，写时瓶颈在次盘IO。
+磁盘读写速率大概在 70M/s，带宽 = 1Gbps，即 125 MBps；读时瓶颈在网络，写时瓶颈在磁盘IO。
 
 假设用户与服务器配置相同，以下为 1 个 group 测试结果：
 
@@ -49,6 +51,22 @@ Read
 
 需先拿到所有块的流，进行矩阵运算，得到流式结果数据块。（计算在坏服务器端读取时计算）
 
+#### RS 算法好处
+
+* 可靠性更高，同样是1:1备份，原方案若两台server宕机则会丢失数据，采用RS算法最多允许任意4台服务器宕机数据还能恢复，5台才会丢数据；
+
+* 不存在 1:1备份的一致性问题，系统更简单；
+
+* 实际可用空间可配置大些，如 6 + 2；
+
+* 运行中，可自动修复坏块；
+
+* 维护简单，新服务器替换坏服务器即可，数据自动恢复；
+
+* 扩展方便，直接加 group 即可（rebalance 算法）
+
+  （**后期可考虑去掉 coordinator。才用 hash 确定 group，set 及路径，校验放到同路径下**。）
+
 #### 架构演进
 
 主备 --》reed-solomon
@@ -65,7 +83,11 @@ Read
 
 两台 coordinator，由于其无状态，不存储任何信息，所以完全可以由 ngnix 做平等转发。coor 与 cs 都定时向 mysql 发送心跳，coor 去查看心跳，发现有坏机器时向运维及研发发邮件。
 
-##### 限流、降级
+##### 限流
+
+guava
+
+##### 降级
 
 todo
 
@@ -117,7 +139,7 @@ java 矩阵运算包 ：**jama**(java matrix package)、jmathlib
 ### Why
 
 * 高可用性，down 机
-  * minio高可用：erasure code，highway hash，reed-solomon code。n 份原始数据 + m 份备份数据，能通过 n+m 中的任意 n 份数据还原数据。todo 查论文。
+  * minio高可用：erasure code，highway hash，reed-solomon code。n 份原始数据 + m 份备份数据，能通过 n+m 中的任意 n 份数据还原数据。
 
 * 单机性能瓶颈
 * 扩容（动态添加 group）
@@ -131,8 +153,6 @@ java 矩阵运算包 ：**jama**(java matrix package)、jmathlib
 文件存储、文件同步、文件下载
 
 coor 是对等的，2台。
-
-同一 group 内容相同，不同 group 内容不同。
 
 group 内剩余容量，以最小的机器为准，因此建议机器配置相同，以免浪费。
 
@@ -150,7 +170,8 @@ group 内剩余容量，以最小的机器为准，因此建议机器配置相�
 
 ### 遇到的印象深刻的问题并如何解决
 
-1. mysql 死锁，原因：select for update；解决：业务逻辑绕过 select for update；总结：不允许使用 select for update。
+1. mysql 死锁，原因：select for update；解决：业务逻辑绕过 select for update；总结：不允许使用 select for update。学习：将 mysql 的锁相关研究了个遍。
+1. 扩容写热点问题 -- rebalance
 
 ### 考点
 
@@ -228,4 +249,36 @@ SEC-DED(Single Error Correcting - Double Error Detect)
 ### 参考文献
 
 reed-solomon论文：chrome-extension://cdonnmffkdaoajfknoeeecmchibpmkmg/assets/pdf/web/viewer.html?file=https%3A%2F%2Fcgi.di.uoa.gr%2F~ad%2FM155%2FPapers%2FRS-Tutorial.pdf
+
+## 业财
+
+六七千合同、几百亿流水（每年约一百多亿）、3w左右张发票（老合同都放在一张票）
+
+平均每天一两个合同，四五张发票
+
+### 业务梳理
+
+#### 收款线
+
+合同拆分、完工确认、发票、到款
+
+#### 付款线
+
+合同预算、内部协作、收入分配、采购
+
+#### 公司内不同组对接（mq（合同、项目））
+
+合同管理、项目管理（mq）（公司内一般直接查别的组的 redis，不会先通过接口查再放到自己的 redis）
+
+#### 外部系统对接（sap）
+
+通过接口推送（放到 redis）
+
+### 技术
+
+台账统计：合理建立索引、晚上做统计到天的计算、晚上做系统内的一致性计算
+
+mq：合同、项目等公司内不同组间数据传输
+
+redis：请求基础数据时通过接口，放到redis缓存；分布式锁（解决例如拆分时连续点击两次提交）
 
