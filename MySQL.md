@@ -535,6 +535,13 @@ N：每次 commit 到 page cache，N次commit后到磁盘
 
 ## 两阶段提交
 
+### 背景
+
+如果没有2PC，那么会有如下 2 种场景：
+
+1. 先 redo 后 binlog。若在写完 redo 未写 binlog 时宕机，此时主备是不一致的，主是新的，备是旧的。
+2. 先 binlog 后 redo。若在写完 binlog 未写 redo 时宕机，此时主备仍不一致，主旧，备新。
+
 ### 过程
 
 **下图的写入都指 fsync**
